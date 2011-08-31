@@ -2,6 +2,9 @@ import sys
 import mechanize
 from BeautifulSoup import BeautifulSoup
 
+#Get file location from user
+fileLoc = raw_input("Enter file location:")
+
 #This section takes an image and converts it to Japanse text
 response = mechanize.urlopen("http://maggie.ocrgrid.org/nhocr/")
 forms = mechanize.ParseResponse(response, backwards_compat=False)
@@ -9,7 +12,7 @@ form = forms[0]
 print form 
 
 #Adding file to the form
-form.add_file(open("image2.pgm"),"image/x-pgm","image.pgm")
+form.add_file(open(fileLoc),"image/x-jpg","image.jpg")
 
 jText = mechanize.urlopen(form.click()).read()
 
