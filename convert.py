@@ -9,15 +9,14 @@ fileLoc = raw_input("Enter file location:")
 response = mechanize.urlopen("http://maggie.ocrgrid.org/nhocr/")
 forms = mechanize.ParseResponse(response, backwards_compat=False)
 form = forms[0]
-print form 
+print "Processing..."
 
 #Adding file to the form
 form.add_file(open(fileLoc),"image/x-jpg","image.jpg")
 
 jText = mechanize.urlopen(form.click()).read()
-
-print 
-print jText
+print
+print "Japanese Text: " + jText
 
 #This section takes the japanese text and converts it to English
 br = mechanize.Browser()
@@ -31,24 +30,16 @@ br["tl"] = ["en"]
 responseEnglish = br.submit()
 webText = responseEnglish.read()
 
-#responseJapanese = br.open("http://translate.google.com/")
-#formsJapanese = mechanize.ParseResponse(responseJapanese, backwards_compat=False)
-#formJapanese = formsJapanese[0]
-#print formJapanese
-
-##adding japanese text to the google translate form
-#formJapanese["text"] = jText
-#formJapanese["sl"] = ["ja"]
-#formJapanese["tl"] = ["en"]
-#webText = br.open(formJapanese.submit()).read()
-
-#FILE = open("test.html", "w")
-#FILE.writelines(webText)
-#FILE.close()
-
 soup = BeautifulSoup(''.join(webText))
-rBox = soup.find('span', id="result_box")
-print rBox.contents[0].contents[0].string
+#Print the romaji
+romaji = soup.find('div', id="src-translit")
+print
+print "Romaji: " + romaji.contents[0].string 
+
+#Print the english translation
+englishTranslation = soup.find('span', id="result_box")
+print
+print "English Text: " + englishTranslation.contents[0].contents[0].string
 
 
 
